@@ -28,7 +28,7 @@ namespace MasterMind2
         private int correctPosition = 0;
         private int correctColorWrongPosition = 0;
         private int incorrectColor = 0;
-        private int totalScore = 0;
+        private int totalScore = 100;
 
 
         public MainWindow()
@@ -374,7 +374,7 @@ namespace MasterMind2
         }
         private void UpdateScoreLabel()
         {
-            scoreLabel.Content = $"Score: {totalScore} punten";
+            scoreLabel.Content = $"Score: {totalScore}/100 punten";
         }
         private void CheckForWin()
         {
@@ -442,6 +442,32 @@ namespace MasterMind2
         private void MenuItem_NewGame_Click(object sender, RoutedEventArgs e)
         {
             ResetGame();
+        }
+
+
+        private string playerName = string.Empty;
+
+        private string StartGame()
+        {
+            string name = string.Empty;
+
+           
+            while (string.IsNullOrWhiteSpace(name))
+            {
+                var inputDialog = new InputDialog("Voer je naam in", "Naam speler");
+                if (inputDialog.ShowDialog() == true)
+                {
+                    name = inputDialog.ResponseText?.Trim();
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        MessageBox.Show("De naam mag niet leeg zijn", "Ongeldige invoer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                
+            }
+
+            return name;
+
         }
 
     }

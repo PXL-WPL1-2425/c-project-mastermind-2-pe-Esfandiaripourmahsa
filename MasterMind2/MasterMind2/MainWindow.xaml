@@ -36,9 +36,13 @@
             </MenuItem>
             <MenuItem Header ="Instellingen" FontSize="18">
                 <MenuItem Header="Aantal pogingen" Click="AantalPoging_Click"/>
+                
 
             </MenuItem>
         </Menu>
+        
+        
+        
 
 
 
