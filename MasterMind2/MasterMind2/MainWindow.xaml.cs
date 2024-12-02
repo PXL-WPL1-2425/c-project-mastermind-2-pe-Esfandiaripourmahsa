@@ -439,6 +439,29 @@ namespace MasterMind2
                 e.Cancel = true;
             }
         }
+       
+
+       
+
+       
+
+
+        private void AantalPoging_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+        private void MenuItem_HighScore_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void MenuItem_NewGame_Click(object sender, RoutedEventArgs e)
+        {
+            ResetGame();
+        }
 
     }
 

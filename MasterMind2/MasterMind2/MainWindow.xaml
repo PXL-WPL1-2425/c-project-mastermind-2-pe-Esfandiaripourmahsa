@@ -9,7 +9,8 @@
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="126*"/>
-            <ColumnDefinition Width="27*"/>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="20*"/>
             <ColumnDefinition Width="7*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -25,6 +26,24 @@
             </LinearGradientBrush>
         </Grid.Background>
 
+        <Menu Height="30" VerticalAlignment="Center" Width="800" Grid.ColumnSpan="4">
+            <MenuItem Header="Bestand" FontSize="18">
+                <MenuItem Header="_Nieuwe Spel" Click="MenuItem_NewGame_Click"/>
+                <MenuItem Header="_Highscore" Click="MenuItem_HighScore_Click"/>
+
+                <MenuItem Header="_Afsluiten" Click="MenuItem_Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header ="Instellingen" FontSize="18">
+                <MenuItem Header="Aantal pogingen" Click="AantalPoging_Click"/>
+
+            </MenuItem>
+        </Menu>
+        
+
+
+
+
+
 
         <Button x:Name="checkCodeButton" Content="Check code" HorizontalAlignment="Left" Margin="241,205,0,0" VerticalAlignment="Top" FontSize="24" Height="50" Width="318" Click="CheckButton_Click" Background="#FFC00000" BorderBrush="Black" BorderThickness="5,5,5,5" Foreground="White" FontFamily="Tempus Sans ITC" Grid.Row="2"/>
 
@@ -32,7 +51,7 @@
 
 
 
-        <ComboBox  Name="color1" HorizontalAlignment="Left" Margin="80,13,0,0" VerticalAlignment="Top" Width="150" Height="35" SelectionChanged="color1_SelectionChanged" Grid.Row="1" Grid.RowSpan="2" Background="#FFFEFBFB">
+        <ComboBox  Name="color1" HorizontalAlignment="Left" Margin="80,20,0,0" VerticalAlignment="Top" Width="150" Height="35" SelectionChanged="color1_SelectionChanged" Grid.Row="1" Grid.RowSpan="2" Background="#FFFEFBFB">
             <ComboBoxItem Content="Red"></ComboBoxItem>
             <ComboBoxItem Content="Orange"></ComboBoxItem>
             <ComboBoxItem Content="Yellow"></ComboBoxItem>
@@ -40,7 +59,7 @@
             <ComboBoxItem Content="White"></ComboBoxItem>
             <ComboBoxItem Content="Blue"></ComboBoxItem>
         </ComboBox>
-        <ComboBox Name="color2" HorizontalAlignment="Left" Margin="248,13,0,0" VerticalAlignment="Top" Width="150" Height="35" SelectionChanged="color2_SelectionChanged" Grid.Row="1" Grid.RowSpan="2">
+        <ComboBox Name="color2" HorizontalAlignment="Left" Margin="248,0,0,704" VerticalAlignment="Bottom" Width="150" Height="35" SelectionChanged="color2_SelectionChanged" Grid.Row="1" Grid.RowSpan="2">
             <ComboBoxItem Content="Red"></ComboBoxItem>
             <ComboBoxItem Content="Orange"></ComboBoxItem>
             <ComboBoxItem Content="Yellow"></ComboBoxItem>
@@ -48,7 +67,7 @@
             <ComboBoxItem Content="White"></ComboBoxItem>
             <ComboBoxItem Content="Blue"></ComboBoxItem>
         </ComboBox>
-        <ComboBox Name="color3" HorizontalAlignment="Left" Margin="414,14,0,0" VerticalAlignment="Top" Width="150" Height="34" SelectionChanged="color3_SelectionChanged" Grid.Row="1" Grid.RowSpan="2">
+        <ComboBox Name="color3" HorizontalAlignment="Left" Margin="414,20,0,0" VerticalAlignment="Top" Width="150" Height="34" SelectionChanged="color3_SelectionChanged" Grid.Row="1" Grid.RowSpan="2">
             <ComboBoxItem Content="Red"></ComboBoxItem>
             <ComboBoxItem Content="Orange"></ComboBoxItem>
             <ComboBoxItem Content="Yellow"></ComboBoxItem>
@@ -56,7 +75,7 @@
             <ComboBoxItem Content="White"></ComboBoxItem>
             <ComboBoxItem Content="Blue"></ComboBoxItem>
         </ComboBox>
-        <ComboBox Name="color4" HorizontalAlignment="Left" Margin="580,13,0,0" VerticalAlignment="Top" Width="150" Height="35" SelectionChanged="color4_SelectionChanged" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
+        <ComboBox Name="color4" HorizontalAlignment="Left" Margin="580,20,0,0" VerticalAlignment="Top" Width="150" Height="35" SelectionChanged="color4_SelectionChanged" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
             <ComboBoxItem Content="Red"></ComboBoxItem>
             <ComboBoxItem Content="Orange"></ComboBoxItem>
             <ComboBoxItem Content="Yellow"></ComboBoxItem>
@@ -75,7 +94,7 @@
         <Border Name="color3Label" HorizontalAlignment="Left" Height="100" Margin="445,75,0,0" VerticalAlignment="Top" Width="100" BorderBrush="Black" BorderThickness="2" CornerRadius="50" Grid.Row="2">
             <Label Background="Transparent"/>
         </Border>
-        <Border Name="color4Label" HorizontalAlignment="Left" Height="100" Margin="604,75,0,0" VerticalAlignment="Top" Width="100"  BorderBrush="Black" BorderThickness="2" CornerRadius="50" Grid.Row="2" Grid.ColumnSpan="2">
+        <Border Name="color4Label" HorizontalAlignment="Left" Height="100" Margin="604,75,0,0" VerticalAlignment="Top" Width="100"  BorderBrush="Black" BorderThickness="2" CornerRadius="50" Grid.Row="2" Grid.ColumnSpan="3">
             <Label Background="Transparent"/>
         </Border>
         <TextBox x:Name="debugCodeTextBox" HorizontalAlignment="Left" Margin="250,23,0,0" TextWrapping="Wrap" Text="{Binding generatedCode}" VerticalAlignment="Top"  Width="295" Height="34" IsReadOnly="True"  Grid.Row="2" Background="{x:Null}" Visibility="Collapsed" FontSize="16" FontWeight="Bold" TextAlignment="Center" BorderBrush="#FFB83838" Foreground="#FFCECCCC" />
