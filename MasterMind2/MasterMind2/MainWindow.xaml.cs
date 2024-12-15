@@ -233,7 +233,7 @@ namespace MasterMind2
 
         private void CheckButton_Click(object sender, RoutedEventArgs e)
         {
-            if (currentAttempt >= 10)
+            if (currentAttempt >= remainingAttempts)
             {
                 var failed = MessageBox.Show($"You failed! De correcte code was: {string.Join(", ", generatedCode)} Nog eens proberen?",
                                  "FAILED",
@@ -270,7 +270,7 @@ namespace MasterMind2
         {
             timer.Stop();
 
-            if (currentAttempt >= 10)
+            if (currentAttempt >= remainingAttempts)
             { 
                 AddHighScore(name,currentAttempt,totalScore);
             
@@ -436,11 +436,6 @@ namespace MasterMind2
         }
 
 
-       
-
-       
-
-
         private void AantalPoging_Click(object sender, RoutedEventArgs e)
         {
 
@@ -473,7 +468,7 @@ namespace MasterMind2
 
                 if (string.IsNullOrEmpty(name))
                 {
-                    // Sluit de applicatie
+                   
                     Application.Current.Shutdown();
                     return null;
                 } 
@@ -490,11 +485,11 @@ namespace MasterMind2
                
 
             }
-            
 
+            remainingAttempts = AskMaxAttempts();
             totalScore = 100;            
             currentAttempt = 0;          
-            remainingAttempts = 10;
+           
             
 
             ResetGame();
@@ -591,6 +586,47 @@ namespace MasterMind2
                 return false; 
             }
         }
+        private int AskMaxAttempts()
+        {
+            int maxAttempts = 0;
+
+            while (true)
+            {
+               
+                string input = Microsoft.VisualBasic.Interaction.InputBox("Hoeveel pogingen wil je toestaan? (tussen 3 en 20)", "Maximaal aantal pogingen", "10");
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    
+                    Application.Current.Shutdown();
+                    return 0;
+                }
+
+               
+                if (int.TryParse(input, out maxAttempts))
+                {
+                    
+                    if (maxAttempts >= 3 && maxAttempts <= 20)
+                    {
+                        return maxAttempts;
+                    }
+                }
+
+               
+                MessageBox.Show("Gelieve een geldig getal tussen 3 en 20 in te voeren.", "Ongeldige invoer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void CheckGameEnd()
+        {
+            if (currentAttempt >= remainingAttempts)
+            {
+                MessageBox.Show($"Je hebt het niet gehaald binnen {remainingAttempts} pogingen.", "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                StopCountDown();
+            }
+        }
+
+
 
 
 
