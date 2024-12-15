@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace MasterMind2
 {
@@ -29,6 +30,10 @@ namespace MasterMind2
         private int correctColorWrongPosition = 0;
         private int incorrectColor = 0;
         private int totalScore = 100;
+        private int remainingAttempts = 10;
+        private string name = string.Empty;
+
+
 
 
         public MainWindow()
@@ -37,13 +42,13 @@ namespace MasterMind2
             GenerateRandomCode();
             NewTitle();
             this.KeyDown += MainWindow_keyDown;
-
-
+            Name = StartGame();
+            ResetGame();
+            Title = $"MasterMind - Welkom {Name}";
 
             //  timer.Tick += StartCountDown; 
             // timer.Interval = new TimeSpan(0, 0, 1); 
             // timer.Start();
-
         }
 
         /// <summary>
@@ -113,16 +118,13 @@ namespace MasterMind2
             }
         }
 
+
         private void UpdateTitleWithTime()
         {
             Title = $"MasterMind - Poging {currentAttempt} ";
             timerLabel.Content =$"\n Tijd over : \n" +
                 $"{timeLeft} seconden! ";
         }
-
-
-
-
 
 
         private bool isDebugMode = false;
@@ -306,6 +308,7 @@ namespace MasterMind2
             StartCountDown();
             scoreLabel.Content = string.Empty;  
 
+
         
         }
 
@@ -374,7 +377,7 @@ namespace MasterMind2
         }
         private void UpdateScoreLabel()
         {
-            scoreLabel.Content = $"Score: {totalScore}/100 punten";
+            scoreLabel.Content = $"Score: {totalScore}/100 ";
         }
         private void CheckForWin()
         {
@@ -445,31 +448,36 @@ namespace MasterMind2
         }
 
 
-        private string playerName = string.Empty;
+       
+
 
         private string StartGame()
         {
             string name = string.Empty;
 
-           
+
             while (string.IsNullOrWhiteSpace(name))
             {
-                var inputDialog = new InputDialog("Voer je naam in", "Naam speler");
-                if (inputDialog.ShowDialog() == true)
-                {
-                    name = inputDialog.ResponseText?.Trim();
-                    if (string.IsNullOrWhiteSpace(name))
-                    {
-                        MessageBox.Show("De naam mag niet leeg zijn", "Ongeldige invoer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                }
-                
-            }
+                name = Microsoft.VisualBasic.Interaction.InputBox("Wat is uw naam?", "Welkom", " ");
 
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    MessageBox.Show("Gelieve een geldige naam in te voeren.", "Ongeldige invoer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            MessageBox.Show($"Welkom, {name}!", "Start Spel", MessageBoxButton.OK, MessageBoxImage.Information);
+
+
+            totalScore = 100;            
+            currentAttempt = 0;          
+            remainingAttempts = 10;
+
+            ResetGame();
             return name;
 
         }
 
+           
     }
 
 }
