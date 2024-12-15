@@ -32,6 +32,7 @@ namespace MasterMind2
         private int totalScore = 100;
         private int remainingAttempts = 10;
         private string name = string.Empty;
+        private string[] highscores = new string[15];
 
 
 
@@ -243,6 +244,7 @@ namespace MasterMind2
                 if (failed == MessageBoxResult.Yes)
                 {
                     ResetGame();
+                    StartGame();
                 }
                 else
                 {
@@ -251,7 +253,7 @@ namespace MasterMind2
                 return;
             }
 
-                string guess1 = (color1.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
+            string guess1 = (color1.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
             string guess2 = (color2.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
             string guess3 = (color3.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
             string guess4 = (color4.SelectedItem as ComboBoxItem)?.Content.ToString() ?? string.Empty;
@@ -267,23 +269,24 @@ namespace MasterMind2
         private void stopCountDown()
         {
             timer.Stop();
+
             if (currentAttempt >= 10)
-            {
-                var failed = MessageBox.Show($"You failed! De correcte code was: {string.Join(", ", generatedCode)} Nog eens proberen?",
+            { 
+                AddHighScore(name,currentAttempt,totalScore);
+            
+                var failed = MessageBox.Show($"You failed! De correcte code was: {string.Join(", ", generatedCode)} Bekijk highscores?",
                                  "FAILED",
                                  MessageBoxButton.YesNo,
                                  MessageBoxImage.Question);
-                timer.Stop();
+               
                
                 if (failed == MessageBoxResult.Yes)
                 {
-                    ResetGame();
+                    ShowHighScores();
+                    StartGame();
+
                 }
-                else
-                {
-                    Application.Current.Shutdown();
-                }
-                return;
+                ResetGame();
 
 
             }
@@ -303,10 +306,11 @@ namespace MasterMind2
             color2.SelectedItem = null;
             color3.SelectedItem = null;
             color4.SelectedItem = null;
-            GenerateRandomCode();
+         
+            scoreLabel.Content = string.Empty;  
+             GenerateRandomCode();
             NewTitle();
             StartCountDown();
-            scoreLabel.Content = string.Empty;  
 
 
         
@@ -370,7 +374,7 @@ namespace MasterMind2
                 }
                 feedbackRow.Children.Add(chosenColorCircle);
             }
-            totalScore += (correctPosition * 0) + (correctColorWrongPosition * -1) + (incorrectColor * -2);
+            totalScore += (correctPosition * 10) + (correctColorWrongPosition * 5) + (incorrectColor * -2);
 
             feedbackOverviewPanel.Children.Add(feedbackRow);
             UpdateScoreLabel();
@@ -384,6 +388,8 @@ namespace MasterMind2
             if (correctPosition == 4)
             {
                 timer.Stop();
+                AddHighScore(name,currentAttempt,totalScore);
+
                 var result = MessageBox.Show($"Code is geraakt in {currentAttempt} pogingen.  Wil je nog eens?",
                                              "WINNER",
                                              MessageBoxButton.YesNo,
@@ -392,6 +398,11 @@ namespace MasterMind2
                 if (result == MessageBoxResult.Yes)
                 {
                     ResetGame();
+                    StartGame();
+                }
+                else if (result==MessageBoxResult.No)
+                {
+                    ShowHighScores();
                 }
                 else
                 {
@@ -440,7 +451,7 @@ namespace MasterMind2
         }
         private void MenuItem_HighScore_Click(object sender, RoutedEventArgs e)
         {
-
+            ShowHighScores();
         }
         private void MenuItem_NewGame_Click(object sender, RoutedEventArgs e)
         {
@@ -453,31 +464,139 @@ namespace MasterMind2
 
         private string StartGame()
         {
-            string name = string.Empty;
+            string name;
 
 
-            while (string.IsNullOrWhiteSpace(name))
+            while (true)
             {
                 name = Microsoft.VisualBasic.Interaction.InputBox("Wat is uw naam?", "Welkom", " ");
+
+                if (string.IsNullOrEmpty(name))
+                {
+                    // Sluit de applicatie
+                    Application.Current.Shutdown();
+                    return null;
+                } 
 
                 if (string.IsNullOrWhiteSpace(name))
                 {
                     MessageBox.Show("Gelieve een geldige naam in te voeren.", "Ongeldige invoer", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-            }
-            MessageBox.Show($"Welkom, {name}!", "Start Spel", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                {
+                    MessageBox.Show($"Welkom, {name}!", "Start Spel", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                }
+               
 
+            }
+            
 
             totalScore = 100;            
             currentAttempt = 0;          
             remainingAttempts = 10;
+            
 
             ResetGame();
             return name;
 
         }
 
-           
+        private void AddHighScore(string Name, int attempts, int score)
+        {
+
+
+            string newHighscore = $"{Name} - {attempts} pogingen - {score}/100";
+
+            for (int i = 0; i < highscores.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(highscores[i]))
+                {
+                    highscores[i] = newHighscore;
+                    break;
+                }
+            }
+            highscores = highscores
+                 .Where(h => IsValidHighScore(h))
+                   .OrderByDescending(h => GetScoreFromHighScore(h))
+                   .ThenBy(h => GetAttemptsFromHighScore(h))
+                    .Concat(Enumerable.Repeat(string.Empty, highscores.Length)) 
+                    .Take(highscores.Length)
+                   .ToArray();
+
+        }
+        private int GetScoreFromHighScore(string highscore)
+        {
+            try
+            {
+                
+                string scorePart = highscore.Split('-')[2].Split('/')[0].Trim();
+                return int.TryParse(scorePart, out int score) ? score : 0;
+            }
+            catch
+            {
+                return 0; 
+            }
+        }
+        
+
+      
+        private int GetAttemptsFromHighScore(string highscore)
+        {
+
+
+            try
+            {
+                string attemptsPart = highscore.Split('-')[1].Split(' ')[0].Trim();
+                return int.TryParse(attemptsPart, out int attempts) ? attempts : 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+
+        private void ShowHighScores()
+        {
+            string highScoreDisplay = string.Join("\n", highscores.Where(h => !string.IsNullOrWhiteSpace(h) && IsValidHighScore(h)));
+
+            if (string.IsNullOrWhiteSpace(highScoreDisplay))
+            {
+                highScoreDisplay = "Er zijn nog geen highscores.";
+            }
+
+            MessageBox.Show(highScoreDisplay, "Highscores", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        private bool IsValidHighScore(string highscore)
+        {
+            try
+            {
+               
+                if (string.IsNullOrWhiteSpace(highscore))
+                    return false;
+
+                var parts = highscore.Split('-');
+                if (parts.Length < 3)
+                    return false;
+
+               
+                GetScoreFromHighScore(highscore);
+                GetAttemptsFromHighScore(highscore);
+
+                return true;
+            }
+            catch
+            {
+                return false; 
+            }
+        }
+
+
+
+
+
+
     }
 
 }
